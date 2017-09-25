@@ -4,12 +4,12 @@ using System.Data.SqlClient;
 
 namespace ISBLScan.ViewCode
 {
-	/// <summary>
-	/// Загрузчик прикладной разработки. Устанавливает соединение с системой и вызывает загрузчики конкретных компонент.
-	/// </summary>
-	public class Loader
-	{
-		private SqlConnection _connection;
+    /// <summary>
+    /// Загрузчик прикладной разработки. Устанавливает соединение с системой и вызывает загрузчики конкретных компонент.
+    /// </summary>
+    public class Loader
+    {
+        private SqlConnection _connection;
 
         public string ErrorText;
 
@@ -23,45 +23,54 @@ namespace ISBLScan.ViewCode
         /// <param name="isWinAuth">Признак использования Windows-аутентификации</param>
         /// <returns>True - соединение успешно усановлено, False - соединение не установлено, текст ошибки соединения в поле errorText.</returns>
         public bool Connect(string server, string dataBase, string login = "", string password = "", bool isWinAuth = false)
-		{
-			var connBuilder = new SqlConnectionStringBuilder();
-			connBuilder.DataSource = server;
-			connBuilder.Pooling = false;
-			connBuilder.InitialCatalog = dataBase;
-			connBuilder.ApplicationName = "ISBLScan.ViewCode";
-			if(isWinAuth)
-			{
-				connBuilder.IntegratedSecurity = true;
-			}
-			else
-			{
-				connBuilder.UserID = login;
-				connBuilder.Password = password;
-			}
-			try {
-				_connection = new SqlConnection(connBuilder.ConnectionString);
-				_connection.Open();
-				ErrorText = null;
+        {
+            var connBuilder = new SqlConnectionStringBuilder();
+            connBuilder.DataSource = server;
+            connBuilder.Pooling = false;
+            connBuilder.InitialCatalog = dataBase;
+            connBuilder.ApplicationName = "ISBLScan.ViewCode";
+            if (isWinAuth)
+            {
+                connBuilder.IntegratedSecurity = true;
+            }
+            else
+            {
+                connBuilder.UserID = login;
+                connBuilder.Password = password;
+            }
+            try
+            {
+                _connection = new SqlConnection(connBuilder.ConnectionString);
+                _connection.Open();
+                if (isWinAuth)
+                {
+                    var rightsCommand = _connection.CreateCommand();
+                    rightsCommand.CommandText = "sp_setapprole 'IS-Builder Application Role2', 'XqjYtQPC9wtudKzSDaL8Ta3I3mNILg'";
+                    rightsCommand.ExecuteNonQuery();
+                }
+                ErrorText = null;
                 //tryLoadAndExecuteDebugSQLScript(connection);
-				return true;
-			} catch (Exception e) {
-				ErrorText = e.Message;
-				return false;
-			}
-		}
+                return true;
+            }
+            catch (Exception e)
+            {
+                ErrorText = e.Message;
+                return false;
+            }
+        }
 
         public bool Connect(ConnectionParams cp)
         {
             return Connect(cp.Server, cp.Database, cp.Login, cp.Password, String.IsNullOrWhiteSpace(cp.Password));
         }
 
-		/// <summary>
-		///Отключиться от базы данных 
-		/// </summary>
-		public void Disconnect()
-		{
-			_connection.Close();
-		}
+        /// <summary>
+        ///Отключиться от базы данных 
+        /// </summary>
+        public void Disconnect()
+        {
+            _connection.Close();
+        }
 
         /// <summary>
 		/// Получить версию Builder'a из базы
@@ -86,19 +95,19 @@ SELECT  @Version";
         /// </summary>
         /// <returns>Список узлов</returns>
         public List<IsbNode> Load(List<IsbNode> isblList)
-		{
-		    IsbNode isblNode;
-			
-			var loaderEDocType = new EDocType(_connection);
-		    var loaderFunction = new Function(_connection);
-		    var loaderReference = new Reference(_connection);
-		    var loaderReport = new Report(_connection);
-		    var loaderReportInt = new ReportIntegrate(_connection);
-		    var loaderRoute = new Route(_connection);
-		    var loaderRouteBlock = new RouteBlock(_connection);
-		    var loaderScript = new Script(_connection);
-		    var loaderWizard = new Wizard(_connection);
-		    var loaderCustom = new CustomCalculations(_connection);
+        {
+            IsbNode isblNode;
+
+            var loaderEDocType = new EDocType(_connection);
+            var loaderFunction = new Function(_connection);
+            var loaderReference = new Reference(_connection);
+            var loaderReport = new Report(_connection);
+            var loaderReportInt = new ReportIntegrate(_connection);
+            var loaderRoute = new Route(_connection);
+            var loaderRouteBlock = new RouteBlock(_connection);
+            var loaderScript = new Script(_connection);
+            var loaderWizard = new Wizard(_connection);
+            var loaderCustom = new CustomCalculations(_connection);
             var loaderDialog = new Dialog(_connection);
 
 
@@ -147,6 +156,6 @@ SELECT  @Version";
             isblList.Add(isblNode);
 
             return isblList;
-		}
-	}
+        }
+    }
 }
