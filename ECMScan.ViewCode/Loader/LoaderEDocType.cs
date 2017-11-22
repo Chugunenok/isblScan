@@ -84,8 +84,41 @@ namespace ISBLScan.ViewCode
             reader.Close();
         }
 
+        void LoadMethods(IsbNode eDocTypeNode)
+        {
+            SqlCommand command = new SqlCommand();
+            command.Connection = this.Connection;
+            command.CommandText = "SELECT [Name], [Exprn] FROM [MBEDocTypeMethod] WHERE [TypeID]=@TypeID AND [Exprn] IS NOT NULL ORDER BY [Name]";
+            SqlParameter paramVid = new SqlParameter("@TypeID", SqlDbType.Int);
+            paramVid.Value = eDocTypeNode.Id;
+            command.Parameters.Add(paramVid);
+            command.Prepare();
+            SqlDataReader reader = command.ExecuteReader();
+            if (reader.HasRows)
+            {
+                var methodsNode = new IsbNode("Методы");
+                while (reader.Read())
+                {
+                    var methodNode = new IsbNode();
+                    if (!reader.IsDBNull(0))
+                    {
+                        methodNode.Name = reader.GetString(0).Trim();
+                        methodNode.Code = methodNode.Name;
+                    }
+                    if (!reader.IsDBNull(1))
+                    {
+                        methodNode.Text = reader.GetString(1);
+                    }
+                    methodsNode.Nodes.Add(methodNode);
+                }
+                eDocTypeNode.Nodes.Add(methodsNode);
+            }
+            reader.Close();
+        }
+
         public IsbNode Load()
         {
+            var methodsSupports = CheckTableExist("MBEDocTypeMethod");
             IsbNode listNode = null;
             if (this.CheckTableExist("MBEDocType") && CheckTableExist("MBEDocTypeRecv"))
             {
@@ -130,6 +163,7 @@ namespace ISBLScan.ViewCode
                 foreach (var eDocNode in listNode.Nodes.Where(n => n.Id != 0))
                 {
                     LoadRecvisites(eDocNode);
+                    if (methodsSupports) LoadMethods(eDocNode);
                 }
             }
             return listNode;

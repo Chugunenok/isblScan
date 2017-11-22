@@ -16,45 +16,21 @@ namespace ISBLScan.ViewCode
         /// <summary>
         /// Дерево элементов прикладной разработки
         /// </summary>
-        public IsbNodesList Nodes = new IsbNodesList();
-
-        public List<IsbComparedNode> ComparedNodes = new List<IsbComparedNode>();
+        public List<IsbNode> Nodes = new List<IsbNode>();
 
         public ConnectionParams ConnectionParams { get; set; } = new ConnectionParams();
 
         public void FillParent()
         {
-            foreach (var node in this.Nodes)
+            foreach(var node in this.Nodes)
             {
                 node.FillParent();
             }
         }
 
-        public void Load()
-        {
-            if(ConnectionParams.Database != null)
-            {
-                var loader = new Loader();
-                if (loader.Connect(ConnectionParams))
-                {
-                    loader.Load(this.Nodes);
-                    FillParent();
-                }
-                else
-                {
-                    MessageBox.Show(loader.ErrorText, "Ошибка открытия базы данных");
-                }
-            }
-            else
-            {
-                ReaderAll.Read(this.Nodes, ConnectionParams);
-            }
-           
-        }
-
         public void Search(string[] searchStrArray, bool caseSensitive, bool regExp, bool findAll)
         {
-            foreach (var node in ComparedNodes)
+            foreach (var node in Nodes)
             {
                 FilterNode(node, searchStrArray, caseSensitive, regExp, findAll);
             }
@@ -69,7 +45,7 @@ namespace ISBLScan.ViewCode
         /// <param name="regExp"></param>
         /// <param name="findAll"></param>
         /// <returns></returns>
-        bool FilterNode(IsbComparedNode node, string[] searchStrArray, bool caseSensitive, bool regExp, bool findAll)
+        bool FilterNode(IsbNode node, string[] searchStrArray, bool caseSensitive, bool regExp, bool findAll)
         {
             bool isFound = false;
             //Сначала выделим текущий элемент так, как будто в нём ничего не найдено
@@ -86,7 +62,7 @@ namespace ISBLScan.ViewCode
                     }
                 }
             }
-            string isblText = node.SourceNode?.Text ?? node.TargetNode.Text;
+            string isblText = node.Text;
             string nodeName = node.Name;
             bool searchSatisfied = false;
             if (regExp)
@@ -141,11 +117,6 @@ namespace ISBLScan.ViewCode
             }
             return isFound;
         }
-
-        public void CompareWith(IsbDev targetDev)
-        {
-            ComparedNodes = Nodes.CompareWith(targetDev.Nodes, ConnectionParams.Server == null);
-        }
     }
 
     /// <summary>
@@ -176,7 +147,17 @@ namespace ISBLScan.ViewCode
         /// <summary>
         /// Gets or sets Список подузлов
         /// </summary>
-        public IsbNodesList Nodes { get; set; } = new IsbNodesList();
+        public List<IsbNode> Nodes { get; set; } = new List<IsbNode>();
+
+        /// <summary>
+        /// Gets or sets Признак того, что узел соотвествует поисковому запросу
+        /// </summary>
+        public bool IsMatch { get; set; }
+
+        /// <summary>
+        /// Gets or sets Признак того, что узел содержит подузлы, которые соответствуют поисковому запросу
+        /// </summary>
+        public bool IsContainsMatchedNode { get; set; }
 
         /// <summary>
         /// Gets or sets Дата последней модификации узла разработки (ISBL)
@@ -203,13 +184,13 @@ namespace ISBLScan.ViewCode
 
         public IsbNode GetMainNode()
         {
-            if (Id != 0 && Type != null)
+            if(Id != 0 && Type != null)
             {
                 return this;
             }
             else
             {
-                if (Parent != null)
+                if(Parent != null)
                 {
                     return Parent.GetMainNode();
                 }
@@ -217,7 +198,7 @@ namespace ISBLScan.ViewCode
                 {
                     return null;
                 }
-            }
+            } 
         }
 
         public void OpenInSbrte(ConnectionParams connectionParams)
@@ -236,14 +217,14 @@ namespace ISBLScan.ViewCode
                 { IsbNodeType.Dialog, "-F=\"DIALOGS\"" }
             };
             var mainNode = GetMainNode();
-            if (mainNode != null)
+            if(mainNode != null)
             {
                 var CMDParams = typeToCMDParams[mainNode.Type];
                 var loader = new Loader();
                 var version = loader.GetVersion(connectionParams);
                 var config = LoadVersionToSbrtePathConfig();
                 string FilePath = config.VersionToSbrtePath.Where(c => c.Version == version).FirstOrDefault()?.Path ?? "";
-                if (String.IsNullOrWhiteSpace(FilePath))
+                if(String.IsNullOrWhiteSpace(FilePath))
                 {
                     MessageBoxButtons buttons = MessageBoxButtons.OK;
                     MessageBoxIcon icon = MessageBoxIcon.Information;
@@ -271,7 +252,7 @@ namespace ISBLScan.ViewCode
 
         public void FillParent()
         {
-            foreach (var node in this.Nodes)
+            foreach(var node in this.Nodes)
             {
                 node.Parent = this;
                 node.FillParent();
@@ -315,128 +296,5 @@ namespace ISBLScan.ViewCode
         public string Database;
         public string Login;
         public string Password;
-        public string ISXPath;
-        public string SRPath;
-        public string WIZPath;
-    }
-
-    public enum CompareResult
-    {
-        Added = 0,
-        Deleted = 1,
-        Changed = 2,
-        Equal = 3
-    }
-
-    /// <summary>
-    /// Узел дерева элементов разработки
-    /// </summary>
-    public class IsbComparedNode
-    {
-        public IsbNode SourceNode { get; set; }
-        public IsbNode TargetNode { get; set; }
-        public string Name { get; set; }
-        /// <summary>
-        /// Gets or sets Список подузлов
-        /// </summary>
-        public List<IsbComparedNode> Nodes { get; set; } = new List<IsbComparedNode>();
-
-        /// <summary>
-        /// Gets or sets Признак того, что узел соотвествует поисковому запросу
-        /// </summary>
-        public bool IsMatch { get; set; } = true;
-
-        /// <summary>
-        /// Gets or sets Признак того, что узел содержит подузлы, которые соответствуют поисковому запросу
-        /// </summary>
-        public bool IsContainsMatchedNode { get; set; } = true;
-
-        public CompareResult CompareResult { get; set; } = CompareResult.Equal;
-
-        public IsbComparedNode(IsbNode sourceNode, IsbNode targetNode, CompareResult compare)
-        {
-            SourceNode = sourceNode;
-            TargetNode = targetNode;
-            CompareResult = compare;
-            Name = SourceNode?.Name ?? TargetNode?.Name;
-
-            if(compare == CompareResult.Deleted || compare == CompareResult.Added)
-            {
-                CopyTree(sourceNode, targetNode);
-            }
-        }
-
-        public IsbComparedNode() { }
-
-        public void CopyTree(IsbNode sourceIsbNode, IsbNode targetIsbNode)
-        {
-            foreach(var isbNode in sourceIsbNode?.Nodes ?? targetIsbNode.Nodes)
-            {
-                var node = new IsbComparedNode();
-                node.Name = isbNode.Name;
-                if(sourceIsbNode != null)
-                {
-                    node.SourceNode = isbNode;
-                    node.CopyTree(isbNode, null);
-                }
-                else
-                {
-                    node.TargetNode = isbNode;
-                    node.CopyTree(null, isbNode);
-                }
-                this.Nodes.Add(node);
-            }
-        }
-    }
-
-    public class IsbNodesList : List<IsbNode>
-    {
-        public List<IsbComparedNode> CompareWith(List<IsbNode> targetNodes, bool onlyDeletedAndChanged)
-        {
-            var comparedNodes = new List<IsbComparedNode>();
-
-            var deletedNodes = this.Where(src => !targetNodes.Exists(tar =>
-            {
-                return ((tar.Code == src.Code
-                           && !String.IsNullOrWhiteSpace(src.Code))
-                       || (tar.Name == src.Name
-                           && String.IsNullOrWhiteSpace(tar.Code)
-                           && String.IsNullOrWhiteSpace(src.Code)));
-            }));
-            foreach (var node in deletedNodes)
-            {
-                comparedNodes.Add(new IsbComparedNode(node, null, CompareResult.Deleted));
-            }
-            if (!onlyDeletedAndChanged)
-            {
-                var newNodes = targetNodes.Where(tar => !this.Exists(src =>
-                {
-                    return ((tar.Code == src.Code
-                               && !String.IsNullOrWhiteSpace(src.Code))
-                            || (tar.Name == src.Name
-                                  && String.IsNullOrWhiteSpace(tar.Code)
-                                  && String.IsNullOrWhiteSpace(src.Code)));
-                }));
-                foreach (var node in newNodes)
-                {
-                    comparedNodes.Add(new IsbComparedNode(null, node, CompareResult.Added));
-                }
-            }
-
-            var otherComparedNodes = this.Select(src => new {
-                source = src,
-                target = targetNodes.FirstOrDefault(tar => (!String.IsNullOrWhiteSpace(src.Code) && tar.Code == src.Code) 
-                    || (String.IsNullOrWhiteSpace(tar.Code) && String.IsNullOrWhiteSpace(src.Code) && tar.Name == src.Name))}).
-                Where(pr => pr.target != null).Select(pr => {
-                    var compNode = new IsbComparedNode(pr.source, pr.target, pr.source.Text == pr.target.Text ? CompareResult.Equal : CompareResult.Changed);
-                    var childNodesCompared = pr.source.Nodes.CompareWith(pr.target.Nodes, pr.source.Type != null ? false : onlyDeletedAndChanged);
-                    compNode.Nodes.AddRange(childNodesCompared);
-
-                    return compNode;
-                }).Where(n => n.Nodes.Count > 0 || n.SourceNode.Text != n.TargetNode.Text);
-            comparedNodes.AddRange(otherComparedNodes);
-
-            return comparedNodes;
-        }
     }
 }

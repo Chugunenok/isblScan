@@ -20,13 +20,6 @@ namespace ISBLScan.ViewCode
         {
         }
 
-        /// <summary>
-        /// Загрузка реквизитов справочника
-        /// </summary>
-        /// <param name="refNode">
-        /// Ссылка на узел справочника
-        /// A <see cref="Node"/>
-        /// </param>
         void LoadRecvisites(IsbNode refNode)
         {
             SqlCommand command = new SqlCommand();
@@ -86,8 +79,41 @@ namespace ISBLScan.ViewCode
             reader.Close();
         }
 
+        void LoadMethods(IsbNode refNode)
+        {
+            SqlCommand command = new SqlCommand();
+            command.Connection = this.Connection;
+            command.CommandText = "SELECT [Name], [Exprn] FROM [MBVidAnMethod] WHERE [Vid]=@Vid AND [Exprn] IS NOT NULL ORDER BY [Name]";
+            SqlParameter paramVid = new SqlParameter("@Vid", SqlDbType.Int);
+            paramVid.Value = refNode.Id;
+            command.Parameters.Add(paramVid);
+            command.Prepare();
+            SqlDataReader reader = command.ExecuteReader();
+            if (reader.HasRows)
+            {
+                var methodsNode = new IsbNode("Методы");
+                while (reader.Read())
+                {
+                    var methodNode = new IsbNode();
+                    if (!reader.IsDBNull(0))
+                    {
+                        methodNode.Name = reader.GetString(0).Trim();
+                        methodNode.Code = methodNode.Name;
+                    }
+                    if (!reader.IsDBNull(1))
+                    {
+                        methodNode.Text = reader.GetString(1);
+                    }
+                    methodsNode.Nodes.Add(methodNode);
+                }
+                refNode.Nodes.Add(methodsNode);
+            }
+            reader.Close();
+        }
+
         public IsbNode Load()
         {
+            var methodsSupports = CheckTableExist("MBVidAnMethod");
             var rootRefNode = new IsbNode("Тип справочника");
             if (this.CheckTableExist("MBVidAn") && this.CheckTableExist("MBVidAnRecv"))
             {
@@ -133,6 +159,7 @@ namespace ISBLScan.ViewCode
                 foreach (var node in rootRefNode.Nodes)
                 {
                     LoadRecvisites(node);
+                    if(methodsSupports) LoadMethods(node);
                 }
             }
             return rootRefNode;

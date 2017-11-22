@@ -79,13 +79,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CodeToNameConverter.cs" />
-    <Compile Include="DiffMatchPatch.cs" />
     <Compile Include="Loader\LoaderDialog.cs" />
-    <Compile Include="Models\ISX.cs" />
     <Compile Include="Parsers\ReferenceEventsParser.cs" />
     <Compile Include="Parsers\RouteParser.cs" />
     <Compile Include="Parsers\WizardParser.cs" />
-    <Compile Include="Reader\ReaderAll.cs" />
     <Compile Include="Search.cs" />
     <Compile Include="IsbDev.cs" />
     <Compile Include="Loader\LoaderCommon.cs" />
@@ -240,7 +237,5 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Tools\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>

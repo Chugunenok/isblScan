@@ -23,25 +23,26 @@ namespace ISBLScan.ViewCode
         /// <param name="isWinAuth">Признак использования Windows-аутентификации</param>
         /// <returns>True - соединение успешно усановлено, False - соединение не установлено, текст ошибки соединения в поле errorText.</returns>
         public bool Connect(string server, string dataBase, string login = "", string password = "", bool isWinAuth = false)
-        {
-            var connBuilder = new SqlConnectionStringBuilder();
-            connBuilder.DataSource = server;
-            connBuilder.Pooling = false;
+		{
+			var connBuilder = new SqlConnectionStringBuilder();
+			connBuilder.DataSource = server;
+			connBuilder.Pooling = true;
+            connBuilder.AsynchronousProcessing = true;
+            connBuilder.MultipleActiveResultSets = true;
             connBuilder.InitialCatalog = dataBase;
-            connBuilder.ApplicationName = "ISBLScan.ViewCode";
-            if (isWinAuth)
-            {
-                connBuilder.IntegratedSecurity = true;
-            }
-            else
-            {
-                connBuilder.UserID = login;
-                connBuilder.Password = password;
-            }
-            try
-            {
-                _connection = new SqlConnection(connBuilder.ConnectionString);
-                _connection.Open();
+			connBuilder.ApplicationName = "ISBLScan.ViewCode";
+			if(isWinAuth)
+			{
+				connBuilder.IntegratedSecurity = true;
+			}
+			else
+			{
+				connBuilder.UserID = login;
+				connBuilder.Password = password;
+			}
+			try {
+				_connection = new SqlConnection(connBuilder.ConnectionString);
+				_connection.Open();
                 ErrorText = null;
                 //tryLoadAndExecuteDebugSQLScript(connection);
                 return true;

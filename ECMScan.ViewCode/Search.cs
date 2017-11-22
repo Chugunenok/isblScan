@@ -12,7 +12,6 @@ using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using ICSharpCode.AvalonEdit.Rendering;
-using System.Linq;
 
 namespace ISBLScan.ViewCode
 {
@@ -26,7 +25,7 @@ namespace ISBLScan.ViewCode
         /// <summary>
         /// Gets or sets Элемент разработки
         /// </summary>
-        public IsbComparedNode IsbNode { get; set; }
+        public IsbNode IsbNode { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="SearchNode"/> is visible.
@@ -51,13 +50,13 @@ namespace ISBLScan.ViewCode
         /// </summary>
         public List<SearchNode> Nodes { get; set; } = new List<SearchNode>();
 
-        public SearchNode(IsbComparedNode isbNode)
+        public SearchNode(IsbNode isbNode)
         {
             Name = isbNode.Name;
             IsbNode = isbNode;
             Visible = isbNode.IsMatch || isbNode.IsContainsMatchedNode;
             IsMatch = isbNode.IsMatch;
-            LastUpdate = isbNode.SourceNode?.LastUpdate;
+            LastUpdate = isbNode.LastUpdate;
         }
     }
 
@@ -67,12 +66,9 @@ namespace ISBLScan.ViewCode
         public List<SearchNode> Nodes { get; set; } = new List<SearchNode>();
         public ICSharpCode.AvalonEdit.TextEditor SearchCriteriaTextEditor { get; set; }
         public ICSharpCode.AvalonEdit.TextEditor TextEditor { get; set; }
-        public ICSharpCode.AvalonEdit.TextEditor TextEditorTarget { get; set; }
         private bool regExp { get; set; }
         private bool caseSensitive { get; set; }
         public MainForm.SearchControls SearchControls { get; set; }
-
-        public List<DiffMatchPatch.Diff> Diffs { get; set; }
 
         public bool RegExp
         {
@@ -107,22 +103,22 @@ namespace ISBLScan.ViewCode
             IsbDev = sourceDev;
             BuildSearchNodes(true);
 
-            //SearchCriteriaTextEditor = new ICSharpCode.AvalonEdit.TextEditor
-            //{
-            //    Options =
-            //    {
-            //        ShowEndOfLine = true,
-            //        ShowSpaces = true,
-            //        ShowTabs = true
-            //    }
-            //};
+            SearchCriteriaTextEditor = new ICSharpCode.AvalonEdit.TextEditor
+            {
+                Options =
+                {
+                    ShowEndOfLine = true,
+                    ShowSpaces = true,
+                    ShowTabs = true
+                }
+            };
 
-            //SearchCriteriaTextEditor.TextChanged += SearchCriteriaChanged;
-            //SearchCriteriaTextEditor.TextArea.KeyUp += new System.Windows.Input.KeyEventHandler(TextArea_KeyUp);
-            //SearchCriteriaTextEditor.TextArea.TextView.LineTransformers.Add(new HighlightIncorrectRegExp(this));
-            //SearchCriteriaTextEditor.FontFamily = new FontFamily("Courier New, Courier, monospace");
-            //SearchCriteriaTextEditor.FontSize = 13;
-            //SearchCriteriaTextEditor.FontStretch = FontStretch.FromOpenTypeStretch(5);
+            SearchCriteriaTextEditor.TextChanged += SearchCriteriaChanged;
+            SearchCriteriaTextEditor.TextArea.KeyUp += new System.Windows.Input.KeyEventHandler(TextArea_KeyUp);
+            SearchCriteriaTextEditor.TextArea.TextView.LineTransformers.Add(new HighlightIncorrectRegExp(this));
+            SearchCriteriaTextEditor.FontFamily = new FontFamily("Courier New, Courier, monospace");
+            SearchCriteriaTextEditor.FontSize = 13;
+            SearchCriteriaTextEditor.FontStretch = FontStretch.FromOpenTypeStretch(5);
 
             TextEditor = new ICSharpCode.AvalonEdit.TextEditor
             {
@@ -139,7 +135,7 @@ namespace ISBLScan.ViewCode
                 Text = "",
                 IsReadOnly = true
             };
-            TextEditor.TextArea.TextView.LineTransformers.Add(new HighlightSearchedStrings(this, TextEditor));
+            TextEditor.TextArea.TextView.LineTransformers.Add(new HighlightSearchedStrings(this));
             TextEditor.FontFamily = new FontFamily("Courier New, Courier, monospace");
             TextEditor.FontSize = 13;
             TextEditor.FontStretch = FontStretch.FromOpenTypeStretch(1);
@@ -151,35 +147,6 @@ namespace ISBLScan.ViewCode
                 using (XmlTextReader reader = new XmlTextReader(s))
                 {
                     TextEditor.SyntaxHighlighting = HighlightingLoader.Load(reader, HighlightingManager.Instance);
-                }
-            }
-
-            TextEditorTarget = new ICSharpCode.AvalonEdit.TextEditor
-            {
-                Options =
-                {
-                    ConvertTabsToSpaces = true,
-                    ShowEndOfLine = true,
-                    ShowSpaces = true,
-                    ShowTabs = true,
-                    AllowScrollBelowDocument = false,
-                    EnableRectangularSelection = true,
-                },
-                ShowLineNumbers = true,
-                Text = "",
-                IsReadOnly = true
-            };
-            TextEditorTarget.TextArea.TextView.LineTransformers.Add(new HighlightSearchedStrings(this, TextEditorTarget));
-            TextEditorTarget.FontFamily = new FontFamily("Courier New, Courier, monospace");
-            TextEditorTarget.FontSize = 13;
-            TextEditorTarget.FontStretch = FontStretch.FromOpenTypeStretch(1);
-            TextEditorTarget.TextArea.KeyUp += new System.Windows.Input.KeyEventHandler(TextArea_KeyUp);
-
-            using (Stream s = File.OpenRead(syntaxHighlightingFilePath))
-            {
-                using (XmlTextReader reader = new XmlTextReader(s))
-                {
-                    TextEditorTarget.SyntaxHighlighting = HighlightingLoader.Load(reader, HighlightingManager.Instance);
                 }
             }
         }
@@ -207,13 +174,12 @@ namespace ISBLScan.ViewCode
                 var selectedNode = SearchControls.TreeViewResults.SelectedNode;
                 if (selectedNode != null)
                 {
-                    ((SearchNode)selectedNode.Tag).IsbNode.SourceNode?.OpenInSbrte(IsbDev.ConnectionParams);
+                    ((SearchNode)selectedNode.Tag).IsbNode.OpenInSbrte(IsbDev.ConnectionParams);
                 }
             }
         }
         public void Process()
         {
-
             if (_searchStrs.Length > 0)
             {
                 IsbDev.Search(_searchStrs, caseSensitive, regExp, FindAll);
@@ -279,68 +245,13 @@ namespace ISBLScan.ViewCode
         public class HighlightSearchedStrings : DocumentColorizingTransformer
         {
             private Search Search { get; set; }
-            private ICSharpCode.AvalonEdit.TextEditor TextEditor { get; set; }
-            public HighlightSearchedStrings(Search search, ICSharpCode.AvalonEdit.TextEditor editor)
+            public HighlightSearchedStrings(Search search)
             {
                 Search = search;
-                TextEditor = editor;
             }
 
             protected override void ColorizeLine(DocumentLine line)
             {
-                var isSource = Search.TextEditor == TextEditor;
-                
-                if (Search.Diffs != null)
-                {
-                    var offset = 0;
-                    var index = 0;
-                    var length = 0;
-                    Brush insertionBrush = new SolidColorBrush(System.Windows.Media.Color.FromArgb(100, 255, 0, 0));
-                    Brush deletionBrush = new SolidColorBrush(System.Windows.Media.Color.FromArgb(100, 0, 255, 0));
-
-                    while (offset < line.EndOffset && index < Search.Diffs.Count) {
-                        var diff = Search.Diffs[index];
-                        if(diff.operation != DiffMatchPatch.Operation.INSERT && isSource)
-                        {
-                            length = diff.text.Length;
-
-                            if (offset + length > line.Offset && diff.operation != DiffMatchPatch.Operation.EQUAL)
-                            {
-                                base.ChangeLinePart(
-                                    Math.Max(offset, line.Offset), // startOffset
-                                    Math.Min(offset + length, line.EndOffset), // endOffset
-                                    (VisualLineElement element) =>
-                                    {
-                                        element.BackgroundBrush = deletionBrush;
-                                    });
-                            }
-
-                            offset = offset + length;
-                        }
-                        if (diff.operation != DiffMatchPatch.Operation.DELETE && !isSource)
-                        {
-                            length = diff.text.Length;
-
-                            if (offset + length > line.Offset && diff.operation != DiffMatchPatch.Operation.EQUAL)
-                            {
-                                base.ChangeLinePart(
-                                    Math.Max(offset, line.Offset), // startOffset
-                                    Math.Min(offset + length, line.EndOffset), // endOffset
-                                    (VisualLineElement element) =>
-                                    {
-                                        element.BackgroundBrush = insertionBrush;
-                                    });
-                            }
-
-                            offset = offset + length;
-                        }
-                        index++;
-                    }
-                }
-                
-                
-
-
                 if (Search._searchStrs.Length > 0)
                 {
                     int lineStartOffset = line.Offset;
@@ -510,29 +421,13 @@ namespace ISBLScan.ViewCode
                     TreeNode treeNode = treeNodes.Add(node.Name);
                     treeNode.Tag = node;
 
-                    //if (node.IsMatch)
-                    //{
-                    //    treeNode.ForeColor = System.Drawing.Color.Black;
-                    //}
-                    //else
-                    //{
-                    //    treeNode.ForeColor = System.Drawing.Color.Gray;
-                    //}
-
-                    switch (node.IsbNode.CompareResult)
+                    if (node.IsMatch)
                     {
-                        case CompareResult.Deleted:
-                            treeNode.ForeColor = System.Drawing.Color.Blue;
-                            break;
-                        case CompareResult.Added:
-                            treeNode.ForeColor = System.Drawing.Color.Green;
-                            break;
-                        case CompareResult.Changed:
-                            treeNode.ForeColor = System.Drawing.Color.Red;
-                            break;
-                        case CompareResult.Equal:
-                            treeNode.ForeColor = System.Drawing.Color.Black;
-                            break;
+                        treeNode.ForeColor = System.Drawing.Color.Black;
+                    }
+                    else
+                    {
+                        treeNode.ForeColor = System.Drawing.Color.Gray;
                     }
 
                     CopySearchNodesToTreeNodes(node.Nodes, treeNode.Nodes);
@@ -612,10 +507,10 @@ namespace ISBLScan.ViewCode
         void BuildSearchNodes(bool copyAll = false)
         {
             Nodes.Clear();
-            CopyMatchedIsblNodes(Nodes, IsbDev.ComparedNodes, copyAll);
+            CopyMatchedIsblNodes(Nodes, IsbDev.Nodes, copyAll);
         }
 
-        void CopyMatchedIsblNodes(List<SearchNode> targetNodes, List<IsbComparedNode> sourceNodes, bool copyAll)
+        void CopyMatchedIsblNodes(List<SearchNode> targetNodes, List<IsbNode> sourceNodes, bool copyAll)
         {
             foreach (var isblNode in sourceNodes)
             {
@@ -639,7 +534,6 @@ namespace ISBLScan.ViewCode
             IsbDev = null;
             _searchStrs = null;
             TextEditor = null;
-            TextEditorTarget = null;
             SearchCriteriaTextEditor = null;
         }
     }
