@@ -40,7 +40,7 @@ namespace ISBLScan.ViewCode
                 }
             }
 
-            var properties = schema.SelectNodes("//Properties/Property[@Type = '2' and @Name != 'Name']");
+            var properties = schema.SelectNodes("//Properties/Property[(@Type = '2' or @Type = '5') and @Name != 'Name']");
             foreach (XmlNode property in properties)
             {
                 var propertyStringNode = property.SelectSingleNode("Value/Value");
@@ -83,7 +83,7 @@ namespace ISBLScan.ViewCode
                     routeNode.Nodes.Add(eventNode);
                 }
             }
-            var routeProperties = schema.SelectNodes("/Settings/Properties/Property[@Type = '2' and @Name != 'Name']");
+            var routeProperties = schema.SelectNodes("/Settings/Properties/Property[(@Type = '2' or @Type = '5') and @Name != 'Name']");
             foreach (XmlNode property in routeProperties)
             {
                 var propertyStringNode = property.SelectSingleNode("Value/Value");
@@ -103,11 +103,11 @@ namespace ISBLScan.ViewCode
             foreach (XmlNode block in blocks)
             {
                 var blockNode = new IsbNode();
-                var nameProperty = block.SelectSingleNode("Properties/Property[@Type = '2' and @Name = 'Name']/Value/Value");
+                var nameProperty = block.SelectSingleNode("Properties/Property[(@Type = '2' or @Type = '5') and @Name = 'Name']/Value/Value");
                 if (nameProperty != null) blockNode.Name = block.Attributes["ID"].Value + ". " + GetNodeString(nameProperty);
                 else blockNode.Name = block.Attributes["ID"].Value;
 
-                var properties = block.SelectNodes("Properties/Property[@Type = '2' and @Name != 'Name']");
+                var properties = block.SelectNodes("Properties/Property[(@Type = '2' or @Type = '5') and @Name != 'Name']");
                 foreach (XmlNode property in properties)
                 {
                     var propertyStringNode = property.SelectSingleNode("Value/Value");

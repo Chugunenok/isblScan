@@ -28,6 +28,7 @@ namespace ISBLScan.ViewCode
             public string CalculationName { get; set; }
             public string TableName { get; set; }
             public bool IsTextRequisite { get; set; }
+            public string FieldForUseAsCode { get; set; }
         }
 
         private class Config 
@@ -53,10 +54,13 @@ namespace ISBLScan.ViewCode
             {
                 SqlCommand command = new SqlCommand();
                 command.Connection = Connection;
+                var codeSelect = String.IsNullOrWhiteSpace(setting.FieldForUseAsCode) ? "''" : "tbl." + setting.FieldForUseAsCode;
+                var addToNameSelect = String.IsNullOrWhiteSpace(setting.FieldForUseAsCode) && setting.FieldForUseAsCode != "NameAn" ? "" : " + ' (' + tbl." + setting.FieldForUseAsCode + "+ ')'";
                 if (setting.IsTextRequisite)
                 {
                     command.CommandText = @"
-select ref.NameAn + '(' + cast(ref.Analit as varchar) + ')'
+select ref.NameAn " + addToNameSelect + @"
+    , " + codeSelect + @"
     , MBText." + setting.RequisiteName + @"
     , (select max(prot.DateAct)
         from XProtokol prot 
@@ -69,7 +73,8 @@ where ref.Vid = (select Vid from MBVidAn where Kod = '" + setting.ReferenceName 
                 else
                 {
                     command.CommandText = @"
-select ref.NameAn + '(' + cast(ref.Analit as varchar) + ')'
+select ref.NameAn " + addToNameSelect + @"
+    , " + codeSelect + @"
     , tbl." + setting.RequisiteName + @"
     , (select max(prot.DateAct)
         from XProtokol prot 
@@ -86,24 +91,25 @@ where ref.Vid = (select Vid from MBVidAn where Kod = '" + setting.ReferenceName 
                     var refNode = new IsbNode(setting.CalculationName);
                     while (reader.Read())
                     {
-                        if (!reader.IsDBNull(1))
+                        if (!reader.IsDBNull(2))
                         {
                             string calculation = "";
                             if (setting.IsTextRequisite)
                             {
-                                var bytes = (byte[])reader.GetValue(1);
+                                var bytes = (byte[])reader.GetValue(2);
                                 calculation = System.Text.Encoding.UTF8.GetString(bytes);
                             }
                             else
                             {
-                                calculation = reader.GetString(1);
+                                calculation = reader.GetString(2);
                             }
 
                             var recordNode = new IsbNode(reader.GetString(0));
+                            recordNode.Code = reader.GetString(1);
                             recordNode.Text = calculation;
-                            if (!reader.IsDBNull(2))
+                            if (!reader.IsDBNull(3))
                             {
-                                refNode.LastUpdate = reader.GetDateTime(2);
+                                refNode.LastUpdate = reader.GetDateTime(3);
                             }
                             refNode.Nodes.Add(recordNode);
                         }

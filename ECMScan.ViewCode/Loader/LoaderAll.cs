@@ -42,12 +42,6 @@ namespace ISBLScan.ViewCode
             {
                 _connection = new SqlConnection(connBuilder.ConnectionString);
                 _connection.Open();
-                if (isWinAuth)
-                {
-                    var rightsCommand = _connection.CreateCommand();
-                    rightsCommand.CommandText = "sp_setapprole 'IS-Builder Application Role2', 'XqjYtQPC9wtudKzSDaL8Ta3I3mNILg'";
-                    rightsCommand.ExecuteNonQuery();
-                }
                 ErrorText = null;
                 //tryLoadAndExecuteDebugSQLScript(connection);
                 return true;
