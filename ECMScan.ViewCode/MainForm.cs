@@ -77,8 +77,7 @@ namespace ISBLScan.ViewCode
                 _form.panelISBLResult.Controls.Add(TextEditorHost);
 
                 TextBoxFilterName = new System.Windows.Forms.TextBox();
-                TextBoxFilterName.Dock = System.Windows.Forms.DockStyle.Fill;
-                TextBoxFilterName.Location = new System.Drawing.Point(0, 0);
+                TextBoxFilterName.Location = new System.Drawing.Point(5, 0);
                 TextBoxFilterName.Margin = new System.Windows.Forms.Padding(4);
                 TextBoxFilterName.Name = "textBoxFilter";
                 TextBoxFilterName.Size = new System.Drawing.Size(280, 22);
@@ -89,7 +88,7 @@ namespace ISBLScan.ViewCode
                 TextBoxFilterStartDate = new System.Windows.Forms.DateTimePicker();
                 TextBoxFilterStartDate.Format = DateTimePickerFormat.Custom;
                 TextBoxFilterStartDate.CustomFormat = "yyyy-MM-dd HH:mm";
-                TextBoxFilterStartDate.Location = new System.Drawing.Point(0, 0);
+                TextBoxFilterStartDate.Location = new System.Drawing.Point(5, 0);
                 TextBoxFilterStartDate.Margin = new System.Windows.Forms.Padding(4);
                 TextBoxFilterStartDate.Name = "textBoxFilterStartDate";
                 TextBoxFilterStartDate.Size = new System.Drawing.Size(130, 22);
@@ -101,7 +100,7 @@ namespace ISBLScan.ViewCode
                 TextBoxFilterEndDate = new System.Windows.Forms.DateTimePicker();
                 TextBoxFilterEndDate.Format = DateTimePickerFormat.Custom;
                 TextBoxFilterEndDate.CustomFormat = "yyyy-MM-dd HH:mm";
-                TextBoxFilterEndDate.Location = new System.Drawing.Point(150, 0);
+                TextBoxFilterEndDate.Location = new System.Drawing.Point(155, 0);
                 TextBoxFilterEndDate.Margin = new System.Windows.Forms.Padding(4);
                 TextBoxFilterEndDate.Name = "textBoxFilterEndDate";
                 TextBoxFilterEndDate.Size = new System.Drawing.Size(130, 22);
@@ -113,7 +112,7 @@ namespace ISBLScan.ViewCode
                 CheckBoxFindAll = new System.Windows.Forms.CheckBox();
                 CheckBoxFindAll.AutoSize = true;
                 CheckBoxFindAll.Dock = System.Windows.Forms.DockStyle.None;
-                CheckBoxFindAll.Location = new System.Drawing.Point(140, 4);
+                CheckBoxFindAll.Location = new System.Drawing.Point(140, 7);
                 CheckBoxFindAll.Margin = new System.Windows.Forms.Padding(4);
                 CheckBoxFindAll.Name = "checkBoxFindAll";
                 CheckBoxFindAll.Size = new System.Drawing.Size(60, 28);
@@ -126,7 +125,7 @@ namespace ISBLScan.ViewCode
                 CheckBoxFindRegExp = new System.Windows.Forms.CheckBox();
                 CheckBoxFindRegExp.AutoSize = true;
                 CheckBoxFindRegExp.Dock = System.Windows.Forms.DockStyle.None;
-                CheckBoxFindRegExp.Location = new System.Drawing.Point(70, 4);
+                CheckBoxFindRegExp.Location = new System.Drawing.Point(70, 7);
                 CheckBoxFindRegExp.Margin = new System.Windows.Forms.Padding(4);
                 CheckBoxFindRegExp.Name = "CheckBoxFindRegExp";
                 CheckBoxFindRegExp.Size = new System.Drawing.Size(60, 28);
@@ -139,7 +138,7 @@ namespace ISBLScan.ViewCode
                 CheckBoxFindCaseSensitive = new System.Windows.Forms.CheckBox();
                 CheckBoxFindCaseSensitive.AutoSize = true;
                 CheckBoxFindCaseSensitive.Dock = System.Windows.Forms.DockStyle.None;
-                CheckBoxFindCaseSensitive.Location = new System.Drawing.Point(2, 4);
+                CheckBoxFindCaseSensitive.Location = new System.Drawing.Point(2, 7);
                 CheckBoxFindCaseSensitive.Margin = new System.Windows.Forms.Padding(4);
                 CheckBoxFindCaseSensitive.Name = "checkBoxFindCaseSensitive";
                 CheckBoxFindCaseSensitive.Size = new System.Drawing.Size(60, 28);

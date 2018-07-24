@@ -119,9 +119,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="ApplicationInfo.cs" />
-    <Compile Include="SynchronizedScrollRichTextBox.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Parsers\DFMParser.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -147,7 +144,6 @@
     <None Include="ISBL.xshd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="test.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
@@ -226,6 +222,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="isbTest.ico" />
+    <Content Include="NpoComputer.IsBuilder.SBLogon.dll" />
+    <Content Include="NpoComputer.IsBuilder.SBRte.dll" />
     <None Include="CustomCalculationConfig.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
