@@ -22,7 +22,7 @@ namespace ISBLScan.ViewCode
 
         public void FillParent()
         {
-            foreach(var node in this.Nodes)
+            foreach (var node in this.Nodes)
             {
                 node.FillParent();
             }
@@ -184,13 +184,13 @@ namespace ISBLScan.ViewCode
 
         public IsbNode GetMainNode()
         {
-            if(Id != 0 && Type != null)
+            if (Id != 0 && Type != null)
             {
                 return this;
             }
             else
             {
-                if(Parent != null)
+                if (Parent != null)
                 {
                     return Parent.GetMainNode();
                 }
@@ -198,10 +198,10 @@ namespace ISBLScan.ViewCode
                 {
                     return null;
                 }
-            } 
+            }
         }
 
-        public void OpenInSbrte(ConnectionParams connectionParams)
+        public void OpenInNewProcess(ConnectionParams connectionParams)
         {
             var typeToCMDParams = new Dictionary<IsbNodeType?, string>()
             {
@@ -217,14 +217,14 @@ namespace ISBLScan.ViewCode
                 { IsbNodeType.Dialog, "-F=\"DIALOGS\"" }
             };
             var mainNode = GetMainNode();
-            if(mainNode != null)
+            if (mainNode != null)
             {
                 var CMDParams = typeToCMDParams[mainNode.Type];
                 var loader = new Loader();
                 var version = loader.GetVersion(connectionParams);
                 var config = LoadVersionToSbrtePathConfig();
                 string FilePath = config.VersionToSbrtePath.Where(c => c.Version == version).FirstOrDefault()?.Path ?? "";
-                if(String.IsNullOrWhiteSpace(FilePath))
+                if (String.IsNullOrWhiteSpace(FilePath))
                 {
                     MessageBoxButtons buttons = MessageBoxButtons.OK;
                     MessageBoxIcon icon = MessageBoxIcon.Information;
@@ -250,9 +250,32 @@ namespace ISBLScan.ViewCode
             }
         }
 
+        public bool UpdateOnServer(ConnectionParams connectionParams, string newValue)
+        {
+            using (var connection = new SBRTEConnector(connectionParams))
+            {
+                var mainNode = GetMainNode();
+                if (mainNode.Type == IsbNodeType.Function)
+                {
+                    var functionRecord = connection.Application.ReferencesFactory.ReferenceFactory["FUNCTIONS"].GetObjectByID(mainNode.Id);
+                    functionRecord.Requisites["ISBFuncText"].Value = newValue;
+                    functionRecord.Save();
+                    this.Text = functionRecord.Requisites["ISBFuncText"].AsString;
+                }
+                if (mainNode.Type == IsbNodeType.Script)
+                {
+                    var scriptRecord = connection.Application.ReferencesFactory.ReferenceFactory["SCRIPTS"].GetObjectByID(mainNode.Id);
+                    scriptRecord.Requisites["Text"].Value = newValue;
+                    scriptRecord.Save();
+                    this.Text = scriptRecord.Requisites["Text"].AsString;
+                }
+            }
+            return true;
+        }
+
         public void FillParent()
         {
-            foreach(var node in this.Nodes)
+            foreach (var node in this.Nodes)
             {
                 node.Parent = this;
                 node.FillParent();

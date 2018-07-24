@@ -113,12 +113,12 @@ namespace ISBLScan.ViewCode
                 CheckBoxFindAll = new System.Windows.Forms.CheckBox();
                 CheckBoxFindAll.AutoSize = true;
                 CheckBoxFindAll.Dock = System.Windows.Forms.DockStyle.None;
-                CheckBoxFindAll.Location = new System.Drawing.Point(320, 4);
+                CheckBoxFindAll.Location = new System.Drawing.Point(140, 4);
                 CheckBoxFindAll.Margin = new System.Windows.Forms.Padding(4);
                 CheckBoxFindAll.Name = "checkBoxFindAll";
-                CheckBoxFindAll.Size = new System.Drawing.Size(146, 28);
+                CheckBoxFindAll.Size = new System.Drawing.Size(60, 28);
                 CheckBoxFindAll.TabIndex = 1226;
-                CheckBoxFindAll.Text = "satisfies all criteria";
+                CheckBoxFindAll.Text = "All";
                 CheckBoxFindAll.UseVisualStyleBackColor = true;
                 CheckBoxFindAll.CheckedChanged += new System.EventHandler(form.checkBoxFindAll_CheckedChanged);
                 _form.panelSearchButtons.Controls.Add(CheckBoxFindAll);
@@ -126,12 +126,12 @@ namespace ISBLScan.ViewCode
                 CheckBoxFindRegExp = new System.Windows.Forms.CheckBox();
                 CheckBoxFindRegExp.AutoSize = true;
                 CheckBoxFindRegExp.Dock = System.Windows.Forms.DockStyle.None;
-                CheckBoxFindRegExp.Location = new System.Drawing.Point(150, 4);
+                CheckBoxFindRegExp.Location = new System.Drawing.Point(70, 4);
                 CheckBoxFindRegExp.Margin = new System.Windows.Forms.Padding(4);
                 CheckBoxFindRegExp.Name = "CheckBoxFindRegExp";
-                CheckBoxFindRegExp.Size = new System.Drawing.Size(170, 28);
+                CheckBoxFindRegExp.Size = new System.Drawing.Size(60, 28);
                 CheckBoxFindRegExp.TabIndex = 1225;
-                CheckBoxFindRegExp.Text = ".* (regular expression)";
+                CheckBoxFindRegExp.Text = "RegExp";
                 CheckBoxFindRegExp.UseVisualStyleBackColor = true;
                 CheckBoxFindRegExp.CheckedChanged += new System.EventHandler(form.checkBoxFindRegExp_CheckedChanged);
                 _form.panelSearchButtons.Controls.Add(CheckBoxFindRegExp);
@@ -142,9 +142,9 @@ namespace ISBLScan.ViewCode
                 CheckBoxFindCaseSensitive.Location = new System.Drawing.Point(2, 4);
                 CheckBoxFindCaseSensitive.Margin = new System.Windows.Forms.Padding(4);
                 CheckBoxFindCaseSensitive.Name = "checkBoxFindCaseSensitive";
-                CheckBoxFindCaseSensitive.Size = new System.Drawing.Size(150, 28);
+                CheckBoxFindCaseSensitive.Size = new System.Drawing.Size(60, 28);
                 CheckBoxFindCaseSensitive.TabIndex = 1224;
-                CheckBoxFindCaseSensitive.Text = "Aa (case sensitive)";
+                CheckBoxFindCaseSensitive.Text = "Aa";
                 CheckBoxFindCaseSensitive.UseVisualStyleBackColor = true;
                 CheckBoxFindCaseSensitive.CheckedChanged += new System.EventHandler(form.checkBoxFindCaseSensitive_CheckedChanged);
                 _form.panelSearchButtons.Controls.Add(CheckBoxFindCaseSensitive);
@@ -271,75 +271,18 @@ namespace ISBLScan.ViewCode
                     namedArguments[splitted[0]] = splitted[1];
                 }
             }
-            if (namedArguments.Count > 0)
-            {
-                namedArguments.TryGetValue("-S", out sqlServer);
-                namedArguments.TryGetValue("-D", out dataBase);
-                namedArguments.TryGetValue("-N", out login);
-                namedArguments.TryGetValue("-W", out password);
 
-                textBoxSQLServer.Text = sqlServer;
-                textBoxDB.Text = dataBase;
-                textBoxLogin.Text = login;
-                checkBoxWinAuth.Checked = String.IsNullOrWhiteSpace(password);
-                textBoxPassword.Text = password;
+            namedArguments.TryGetValue("-S", out sqlServer);
+            namedArguments.TryGetValue("-D", out dataBase);
+            namedArguments.TryGetValue("-N", out login);
+            namedArguments.TryGetValue("-W", out password);
 
-                ConnectAndGetIsbl();
-            }
-            else
-            {
-                if (Configuration.Load(out sqlServer, out dataBase, out login, out isWinAuth))
-                {
-                    textBoxSQLServer.Text = sqlServer;
-                    textBoxDB.Text = dataBase;
-                    textBoxLogin.Text = login;
-                    if (isWinAuth)
-                    {
-                        textBoxPassword.Text = "";
-                        checkBoxWinAuth.Checked = isWinAuth;
-                    }
-                    else
-                    {
-                        textBoxPassword.Text = "";
-                    }
-                }
-            }
+            SourceDev.ConnectionParams.Server = sqlServer;
+            SourceDev.ConnectionParams.Database = dataBase;
+            SourceDev.ConnectionParams.Login = login;
+            SourceDev.ConnectionParams.Password = password;
 
-        }
-
-        /// <summary>
-        /// Установка соединения с базой данных SQL Server
-        /// </summary>
-        /// <returns></returns>
-		bool Connect()
-        {
-            bool connect;
-            if (checkBoxWinAuth.Checked)
-            {
-                connect = _isblLoader.Connect(textBoxSQLServer.Text,
-                                   textBoxDB.Text,
-                                   "",
-                                   "",
-                                   true);
-            }
-            else
-            {
-                connect = _isblLoader.Connect(textBoxSQLServer.Text,
-                                   textBoxDB.Text,
-                                   textBoxLogin.Text,
-                                   textBoxPassword.Text,
-                                   false
-                                  );
-            }
-            if (connect)
-            {
-                Configuration.Save(textBoxSQLServer.Text, textBoxDB.Text, textBoxLogin.Text, checkBoxWinAuth.Checked);
-                SourceDev.ConnectionParams.Server = textBoxSQLServer.Text;
-                SourceDev.ConnectionParams.Database = textBoxDB.Text;
-                SourceDev.ConnectionParams.Login = textBoxLogin.Text;
-                SourceDev.ConnectionParams.Password = checkBoxWinAuth.Checked ? null : textBoxPassword.Text;
-            }
-            return connect;
+            ConnectAndGetIsbl();
         }
 
         /// <summary>
@@ -348,7 +291,7 @@ namespace ISBLScan.ViewCode
         bool GetIsbl()
         {
             SourceDev.Nodes.Clear();
-            _isblLoader.Load(SourceDev.Nodes);
+            _isblLoader.Load(SourceDev);
             SourceDev.FillParent();
 
             bool isblNodesIsEmpty = true;
@@ -362,26 +305,10 @@ namespace ISBLScan.ViewCode
             }
             if (isblNodesIsEmpty)
             {
-                string loginSqlUser = this.textBoxLogin.Text;
-                if (this.checkBoxWinAuth.Checked)
-                {
-                    loginSqlUser = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
-                }
-                else
-                {
-                    loginSqlUser = this.textBoxLogin.Text;
-                }
-                string text = string.Format(
-@"В выбранной базе данных ""{0}"" сервера ""{1}"" отсутствуют таблицы разработки.
-Или у пользователя с логином ""{2}"" нет прав на просмотр содержимого таблиц разработки в указанной базе данных."
-                , this.textBoxDB.Text
-                , this.textBoxSQLServer.Text
-                , loginSqlUser
-);
                 string caption = "Разработка не загружена";
+                string text = $"Server: {SourceDev.ConnectionParams.Server}\n DB: {SourceDev.ConnectionParams.Database}\n Login: {SourceDev.ConnectionParams.Login}\n Password: {SourceDev.ConnectionParams.Password}";
                 MessageBoxButtons buttons = MessageBoxButtons.OK;
                 MessageBoxIcon icon = MessageBoxIcon.Information;
-                //MessageBoxDefaultButton defaultButton = MessageBoxDefaultButton.Button1;
                 MessageBox.Show(text, caption, buttons, icon);
                 return false;
             }
@@ -393,52 +320,13 @@ namespace ISBLScan.ViewCode
         /// </summary>
         void ConnectAndGetIsbl()
         {
-            if ((textBoxSQLServer.Text.Trim() != "") && (textBoxDB.Text.Trim() != "") &&
-                   (checkBoxWinAuth.Checked || (!checkBoxWinAuth.Checked && textBoxLogin.Text.Trim() != ""))
-              )
+            if (GetIsbl())
             {
-                if (Connect())
-                {
-                    if (GetIsbl())
-                    {
-                        var searchControls = (SearchControls)tabControlSearchText.SelectedTab.Tag;
-                        searchControls.Search.Process();
-                        searchControls.Search.FillTreeView(searchControls.TreeViewResults);
-                        searchControls.Search.SearchCriteriaTextEditor.Focus();
-                        buttonSearch.Enabled = true;
-                    }
-                }
-                else
-                {
-                    MessageBox.Show(_isblLoader.ErrorText, "Ошибка открытия базы данных");
-                }
-            }
-            else
-            {
-                if (textBoxLogin.Text.Trim() == "")
-                {
-                    textBoxLogin.Text = "Login";
-                    textBoxLogin.Font = new Font(textBoxLogin.Font, FontStyle.Italic);
-                    textBoxLogin.BackColor = Color.LightCoral;
-                    textBoxLogin.SelectAll();
-                    textBoxLogin.Focus();
-                }
-                if (textBoxDB.Text.Trim() == "")
-                {
-                    textBoxDB.Text = "Data Base";
-                    textBoxDB.Font = new Font(textBoxDB.Font, FontStyle.Italic);
-                    textBoxDB.BackColor = Color.LightCoral;
-                    textBoxDB.SelectAll();
-                    textBoxDB.Focus();
-                }
-                if (textBoxSQLServer.Text.Trim() == "")
-                {
-                    textBoxSQLServer.Text = "Sql Server";
-                    textBoxSQLServer.Font = new Font(textBoxSQLServer.Font, FontStyle.Italic);
-                    textBoxSQLServer.BackColor = Color.LightCoral;
-                    textBoxSQLServer.SelectAll();
-                    textBoxSQLServer.Focus();
-                }
+                var searchControls = (SearchControls)tabControlSearchText.SelectedTab.Tag;
+                searchControls.Search.Process();
+                searchControls.Search.FillTreeView(searchControls.TreeViewResults);
+                searchControls.Search.SearchCriteriaTextEditor.Focus();
+                buttonSearch.Enabled = true;
             }
         }
 
@@ -455,7 +343,14 @@ namespace ISBLScan.ViewCode
         /// <param name="e"></param>
 		void ButtonConnectClick(object sender, EventArgs e)
         {
-            ConnectAndGetIsbl();
+            buttonConnect.Enabled = false;
+            try
+            {
+                ConnectAndGetIsbl();
+            } finally
+            {
+                buttonConnect.Enabled = true;
+            }
         }
 
         /// <summary>
@@ -480,13 +375,6 @@ namespace ISBLScan.ViewCode
             {
                 ConnectAndGetIsbl();
             }
-        }
-
-        void TextBoxLoginFormTextChanged(object sender, EventArgs e)
-        {
-            (sender as TextBox).Font = new Font((sender as TextBox).Font, FontStyle.Regular);
-            (sender as TextBox).BackColor = this.textBoxPassword.BackColor;
-            (sender as TextBox).ForeColor = this.textBoxPassword.ForeColor;
         }
 
         /// <summary>
@@ -515,12 +403,6 @@ namespace ISBLScan.ViewCode
             var searchControls = (SearchControls)tabControlSearchText.SelectedTab.Tag;
             searchControls.Search.FilterEndDate = ((DateTimePicker)sender).Value;
             searchControls.Search.FillTreeView(searchControls.TreeViewResults);
-        }
-
-        void CheckBoxWinAuthCheckedChanged(object sender, EventArgs e)
-        {
-            textBoxLogin.Enabled = !checkBoxWinAuth.Checked;
-            textBoxPassword.Enabled = textBoxLogin.Enabled;
         }
 
         private void buttonCloseCurrentTab_Click(object sender, EventArgs e)
@@ -628,9 +510,41 @@ namespace ISBLScan.ViewCode
                 var selectedNode = ((SearchControls)tabControlSearchText.SelectedTab.Tag).TreeViewResults.SelectedNode;
                 if (selectedNode != null)
                 {
-                    ((SearchNode)selectedNode.Tag).IsbNode.OpenInSbrte(SourceDev.ConnectionParams);
+                    ((SearchNode)selectedNode.Tag).IsbNode.OpenInNewProcess(SourceDev.ConnectionParams);
                 }
 
+            }
+        }
+
+        private void button_save_Click(object sender, EventArgs e)
+        {
+            var selectedNode = ((SearchControls)tabControlSearchText.SelectedTab.Tag).TreeViewResults.SelectedNode;
+            if (selectedNode != null)
+            {
+                button_save.Enabled = false;
+                try
+                {
+                    var searchControls = (SearchControls)tabControlSearchText.SelectedTab.Tag;
+                    var modifiedText = searchControls.Search.TextEditor.Text;
+                    var isbNode = ((SearchNode)selectedNode.Tag).IsbNode;
+                    isbNode.UpdateOnServer(SourceDev.ConnectionParams, modifiedText);
+                    searchControls.Search.TextEditor.Text = isbNode.Text;
+                }
+                finally
+                {
+                    button_save.Enabled = true;
+                }
+            }
+        }
+
+        private void button_cancel_Click(object sender, EventArgs e)
+        {
+            var selectedNode = ((SearchControls)tabControlSearchText.SelectedTab.Tag).TreeViewResults.SelectedNode;
+            if (selectedNode != null)
+            {
+                var searchControls = (SearchControls)tabControlSearchText.SelectedTab.Tag;
+                var isbNode = ((SearchNode)selectedNode.Tag).IsbNode;
+                searchControls.Search.TextEditor.Text = isbNode.Text;
             }
         }
     }

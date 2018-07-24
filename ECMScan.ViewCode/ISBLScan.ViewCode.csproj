@@ -58,9 +58,18 @@
       <HintPath>..\packages\AvalonEdit.5.0.3\lib\Net40\ICSharpCode.AvalonEdit.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net40\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="NpoComputer.IsBuilder.SBLogon">
+      <HintPath>.\NpoComputer.IsBuilder.SBLogon.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="NpoComputer.IsBuilder.SBRte">
+      <HintPath>.\NpoComputer.IsBuilder.SBRte.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -83,6 +92,7 @@
     <Compile Include="Parsers\ReferenceEventsParser.cs" />
     <Compile Include="Parsers\RouteParser.cs" />
     <Compile Include="Parsers\WizardParser.cs" />
+    <Compile Include="SBRTEConnector.cs" />
     <Compile Include="Search.cs" />
     <Compile Include="IsbDev.cs" />
     <Compile Include="Loader\LoaderCommon.cs" />
@@ -237,5 +247,24 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <COMReference Include="SBLogon">
+      <Guid>{F2B88AC2-935D-4E2D-89B4-13FD5B8DD868}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="SBRte">
+      <Guid>{00376FF5-0369-4344-9993-C63395C8E1E5}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
 </Project>
