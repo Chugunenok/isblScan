@@ -85,51 +85,41 @@ SELECT  @Version";
         {
             var isblList = sourceDev.Nodes;
             Connect(sourceDev.ConnectionParams);
-            var loaderWizard = new Wizard(_connection);
-            var loaderCustom = new CustomCalculations(_connection);
-            var loaderRoute = new Route(_connection);
-            var loaderRouteBlock = new RouteBlock(_connection);
-            var loaderEDocType = new EDocType(_connection);
-            var loaderFunction = new Function(_connection);
-            var loaderReference = new Reference(_connection);
-            var loaderReport = new Report(_connection);
-            var loaderReportInt = new ReportIntegrate(_connection);
-            var loaderScript = new Script(_connection);
-            //var loaderDialog = new Dialog(_connection);
 
-            //Загрузка вычислений мастеров действий
+#if !DEBUG
+            var loaderWizard = new Wizard(_connection);
             loaderWizard.Load(isblList);
 
-            //Загрузка вычислений из справочников
+            var loaderCustom = new CustomCalculations(_connection);
             loaderCustom.Load(isblList);
 
-            //Загрузка типовых маршрутов(событий маршрутов)
+            var loaderRoute = new Route(_connection);
             loaderRoute.Load(isblList);
 
-            //Загрузка вычислений блоков типовых маршрутов
+            var loaderRouteBlock = new RouteBlock(_connection);
             loaderRouteBlock.Load(isblList);
 
-            //Загрузка типов карточке электронных документов
+            var loaderEDocType = new EDocType(_connection);
             loaderEDocType.Load(isblList);
 
-            //Загрузка текстов функций
+            var loaderFunction = new Function(_connection);
             loaderFunction.Load(isblList);
 
-            //Загрузка текстов событий справочников, вычислений реквизитов, расчётов на форме
+            var loaderReference = new Reference(_connection);
             loaderReference.Load(isblList);
 
-            //Загрузка отчётов (шаблонов и расчётов)
+            var loaderReport = new Report(_connection);
             loaderReport.Load(isblList);
 
-            //Загрузка интегрированных отчётов (шаблонов и расчётов)
+            var loaderReportInt = new ReportIntegrate(_connection);
             loaderReportInt.Load(isblList);
 
-            //Загрузка текстов расчётов (сценариев)
-            loaderScript.Load(isblList);
-
-
-            ////Загрузка текстов событий диалогов, вычислений реквизитов, расчётов на форме
+            //var loaderDialog = new Dialog(_connection);
             //  loaderDialog.Load(isblList);
+
+#endif
+            var loaderScript = new Script(_connection);
+            loaderScript.Load(isblList);
 
             Disconnect();
             return isblList;

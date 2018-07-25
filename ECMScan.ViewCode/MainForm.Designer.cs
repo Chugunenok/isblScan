@@ -80,6 +80,8 @@ namespace ISBLScan.ViewCode
             this.panelSearchText.SuspendLayout();
             this.panelSearchButtons.SuspendLayout();
             this.panelFilterTree.SuspendLayout();
+            this.panelFilterTreeDate.SuspendLayout();
+            this.panelFilterTreeName.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -103,7 +105,7 @@ namespace ISBLScan.ViewCode
             this.toolStripStatusLabelTest});
             this.statusStrip1.Location = new System.Drawing.Point(0, 617);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(792, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(1008, 22);
             this.statusStrip1.TabIndex = 6;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -138,7 +140,7 @@ namespace ISBLScan.ViewCode
             this.panelMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelMain.Location = new System.Drawing.Point(0, 0);
             this.panelMain.Name = "panelMain";
-            this.panelMain.Size = new System.Drawing.Size(792, 617);
+            this.panelMain.Size = new System.Drawing.Size(1008, 617);
             this.panelMain.TabIndex = 7;
             // 
             // panelResults
@@ -147,7 +149,7 @@ namespace ISBLScan.ViewCode
             this.panelResults.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelResults.Location = new System.Drawing.Point(0, 0);
             this.panelResults.Name = "panelResults";
-            this.panelResults.Size = new System.Drawing.Size(792, 617);
+            this.panelResults.Size = new System.Drawing.Size(1008, 617);
             this.panelResults.TabIndex = 2;
             // 
             // splitContainerResults
@@ -165,8 +167,8 @@ namespace ISBLScan.ViewCode
             // splitContainerResults.Panel2
             // 
             this.splitContainerResults.Panel2.Controls.Add(this.splitContainer1);
-            this.splitContainerResults.Size = new System.Drawing.Size(792, 617);
-            this.splitContainerResults.SplitterDistance = 312;
+            this.splitContainerResults.Size = new System.Drawing.Size(1008, 617);
+            this.splitContainerResults.SplitterDistance = 392;
             this.splitContainerResults.SplitterWidth = 7;
             this.splitContainerResults.TabIndex = 0;
             // 
@@ -186,8 +188,8 @@ namespace ISBLScan.ViewCode
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.panelTree);
-            this.splitContainer2.Size = new System.Drawing.Size(312, 617);
-            this.splitContainer2.SplitterDistance = 242;
+            this.splitContainer2.Size = new System.Drawing.Size(392, 617);
+            this.splitContainer2.SplitterDistance = 215;
             this.splitContainer2.TabIndex = 213;
             // 
             // splitContainer3
@@ -206,8 +208,8 @@ namespace ISBLScan.ViewCode
             // splitContainer3.Panel2
             // 
             this.splitContainer3.Panel2.Controls.Add(this.panelFilterTree);
-            this.splitContainer3.Size = new System.Drawing.Size(312, 242);
-            this.splitContainer3.SplitterDistance = 192;
+            this.splitContainer3.Size = new System.Drawing.Size(392, 215);
+            this.splitContainer3.SplitterDistance = 154;
             this.splitContainer3.TabIndex = 0;
             // 
             // groupBoxSearch
@@ -219,7 +221,7 @@ namespace ISBLScan.ViewCode
             this.groupBoxSearch.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBoxSearch.Location = new System.Drawing.Point(0, 0);
             this.groupBoxSearch.Name = "groupBoxSearch";
-            this.groupBoxSearch.Size = new System.Drawing.Size(312, 192);
+            this.groupBoxSearch.Size = new System.Drawing.Size(392, 154);
             this.groupBoxSearch.TabIndex = 140;
             this.groupBoxSearch.TabStop = false;
             this.groupBoxSearch.Text = "Search Text";
@@ -231,7 +233,7 @@ namespace ISBLScan.ViewCode
             this.buttonAddNewTab.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonAddNewTab.ImageIndex = 1;
             this.buttonAddNewTab.ImageList = this.imageList1;
-            this.buttonAddNewTab.Location = new System.Drawing.Point(277, 3);
+            this.buttonAddNewTab.Location = new System.Drawing.Point(357, 3);
             this.buttonAddNewTab.Margin = new System.Windows.Forms.Padding(0);
             this.buttonAddNewTab.Name = "buttonAddNewTab";
             this.buttonAddNewTab.Size = new System.Drawing.Size(14, 14);
@@ -246,7 +248,7 @@ namespace ISBLScan.ViewCode
             this.buttonCloseCurrentTab.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonCloseCurrentTab.ImageIndex = 0;
             this.buttonCloseCurrentTab.ImageList = this.imageList1;
-            this.buttonCloseCurrentTab.Location = new System.Drawing.Point(291, 3);
+            this.buttonCloseCurrentTab.Location = new System.Drawing.Point(371, 3);
             this.buttonCloseCurrentTab.Margin = new System.Windows.Forms.Padding(0);
             this.buttonCloseCurrentTab.Name = "buttonCloseCurrentTab";
             this.buttonCloseCurrentTab.Size = new System.Drawing.Size(14, 14);
@@ -261,7 +263,7 @@ namespace ISBLScan.ViewCode
             this.panelSearchText.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelSearchText.Location = new System.Drawing.Point(3, 16);
             this.panelSearchText.Name = "panelSearchText";
-            this.panelSearchText.Size = new System.Drawing.Size(306, 114);
+            this.panelSearchText.Size = new System.Drawing.Size(386, 110);
             this.panelSearchText.TabIndex = 124;
             // 
             // tabControlSearchText
@@ -271,28 +273,26 @@ namespace ISBLScan.ViewCode
             this.tabControlSearchText.Margin = new System.Windows.Forms.Padding(2);
             this.tabControlSearchText.Name = "tabControlSearchText";
             this.tabControlSearchText.SelectedIndex = 0;
-            this.tabControlSearchText.Size = new System.Drawing.Size(306, 114);
+            this.tabControlSearchText.Size = new System.Drawing.Size(386, 110);
             this.tabControlSearchText.TabIndex = 0;
             this.tabControlSearchText.SelectedIndexChanged += new System.EventHandler(this.tabControlSearchText_SelectedIndexChanged);
             // 
             // panelSearchButtons
             // 
-            this.panelSearchButtons.Controls.Add(this.buttonExpand);
             this.panelSearchButtons.Controls.Add(this.buttonSearch);
-            this.panelSearchButtons.Controls.Add(this.buttonConnect);
             this.panelSearchButtons.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panelSearchButtons.Location = new System.Drawing.Point(3, 130);
+            this.panelSearchButtons.Location = new System.Drawing.Point(3, 126);
             this.panelSearchButtons.Margin = new System.Windows.Forms.Padding(0);
             this.panelSearchButtons.Name = "panelSearchButtons";
-            this.panelSearchButtons.Size = new System.Drawing.Size(306, 59);
+            this.panelSearchButtons.Size = new System.Drawing.Size(386, 25);
             this.panelSearchButtons.TabIndex = 300;
             // 
             // buttonExpand
             // 
-            this.buttonExpand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonExpand.Location = new System.Drawing.Point(92, 31);
+            this.buttonExpand.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.buttonExpand.Location = new System.Drawing.Point(306, 0);
             this.buttonExpand.Name = "buttonExpand";
-            this.buttonExpand.Size = new System.Drawing.Size(81, 25);
+            this.buttonExpand.Size = new System.Drawing.Size(83, 25);
             this.buttonExpand.TabIndex = 1224;
             this.buttonExpand.Text = "Expand Tree";
             this.buttonExpand.UseVisualStyleBackColor = true;
@@ -302,9 +302,9 @@ namespace ISBLScan.ViewCode
             // 
             this.buttonSearch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonSearch.Enabled = false;
-            this.buttonSearch.Location = new System.Drawing.Point(200, 3);
+            this.buttonSearch.Location = new System.Drawing.Point(303, 0);
             this.buttonSearch.Name = "buttonSearch";
-            this.buttonSearch.Size = new System.Drawing.Size(106, 25);
+            this.buttonSearch.Size = new System.Drawing.Size(83, 25);
             this.buttonSearch.TabIndex = 200;
             this.buttonSearch.Text = "Find";
             this.buttonSearch.UseVisualStyleBackColor = true;
@@ -312,8 +312,8 @@ namespace ISBLScan.ViewCode
             // 
             // buttonConnect
             // 
-            this.buttonConnect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonConnect.Location = new System.Drawing.Point(0, 31);
+            this.buttonConnect.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.buttonConnect.Location = new System.Drawing.Point(306, 0);
             this.buttonConnect.Name = "buttonConnect";
             this.buttonConnect.Size = new System.Drawing.Size(83, 25);
             this.buttonConnect.TabIndex = 116;
@@ -328,25 +328,27 @@ namespace ISBLScan.ViewCode
             this.panelFilterTree.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelFilterTree.Location = new System.Drawing.Point(0, 0);
             this.panelFilterTree.Name = "panelFilterTree";
-            this.panelFilterTree.Size = new System.Drawing.Size(312, 46);
+            this.panelFilterTree.Size = new System.Drawing.Size(392, 57);
             this.panelFilterTree.TabIndex = 211;
             // 
             // panelFilterTreeDate
             // 
+            this.panelFilterTreeDate.Controls.Add(this.buttonExpand);
             this.panelFilterTreeDate.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panelFilterTreeDate.Location = new System.Drawing.Point(0, 26);
+            this.panelFilterTreeDate.Location = new System.Drawing.Point(0, 32);
             this.panelFilterTreeDate.Margin = new System.Windows.Forms.Padding(2);
             this.panelFilterTreeDate.Name = "panelFilterTreeDate";
-            this.panelFilterTreeDate.Size = new System.Drawing.Size(312, 20);
+            this.panelFilterTreeDate.Size = new System.Drawing.Size(392, 25);
             this.panelFilterTreeDate.TabIndex = 1;
             // 
             // panelFilterTreeName
             // 
+            this.panelFilterTreeName.Controls.Add(this.buttonConnect);
             this.panelFilterTreeName.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelFilterTreeName.Location = new System.Drawing.Point(0, 0);
             this.panelFilterTreeName.Margin = new System.Windows.Forms.Padding(2);
             this.panelFilterTreeName.Name = "panelFilterTreeName";
-            this.panelFilterTreeName.Size = new System.Drawing.Size(312, 20);
+            this.panelFilterTreeName.Size = new System.Drawing.Size(392, 25);
             this.panelFilterTreeName.TabIndex = 0;
             // 
             // panelTree
@@ -355,7 +357,7 @@ namespace ISBLScan.ViewCode
             this.panelTree.Location = new System.Drawing.Point(0, 0);
             this.panelTree.Name = "panelTree";
             this.panelTree.Padding = new System.Windows.Forms.Padding(0, 2, 0, 0);
-            this.panelTree.Size = new System.Drawing.Size(312, 371);
+            this.panelTree.Size = new System.Drawing.Size(392, 398);
             this.panelTree.TabIndex = 212;
             // 
             // splitContainer1
@@ -375,16 +377,16 @@ namespace ISBLScan.ViewCode
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.panelISBLResult);
-            this.splitContainer1.Size = new System.Drawing.Size(473, 617);
+            this.splitContainer1.Size = new System.Drawing.Size(609, 617);
             this.splitContainer1.SplitterDistance = 29;
             this.splitContainer1.TabIndex = 221;
             // 
             // button_cancel
             // 
             this.button_cancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button_cancel.Location = new System.Drawing.Point(317, 3);
+            this.button_cancel.Location = new System.Drawing.Point(523, 2);
             this.button_cancel.Name = "button_cancel";
-            this.button_cancel.Size = new System.Drawing.Size(75, 23);
+            this.button_cancel.Size = new System.Drawing.Size(83, 25);
             this.button_cancel.TabIndex = 1;
             this.button_cancel.Text = "Cancel";
             this.button_cancel.UseVisualStyleBackColor = true;
@@ -393,10 +395,10 @@ namespace ISBLScan.ViewCode
             // button_save
             // 
             this.button_save.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button_save.Location = new System.Drawing.Point(395, 3);
+            this.button_save.Location = new System.Drawing.Point(434, 2);
             this.button_save.Name = "button_save";
             this.button_save.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.button_save.Size = new System.Drawing.Size(75, 23);
+            this.button_save.Size = new System.Drawing.Size(83, 25);
             this.button_save.TabIndex = 0;
             this.button_save.Text = "Save";
             this.button_save.UseVisualStyleBackColor = true;
@@ -408,7 +410,7 @@ namespace ISBLScan.ViewCode
             this.panelISBLResult.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelISBLResult.Location = new System.Drawing.Point(0, 0);
             this.panelISBLResult.Name = "panelISBLResult";
-            this.panelISBLResult.Size = new System.Drawing.Size(473, 584);
+            this.panelISBLResult.Size = new System.Drawing.Size(609, 584);
             this.panelISBLResult.TabIndex = 220;
             // 
             // tabPageSimpleSearchText
@@ -422,7 +424,7 @@ namespace ISBLScan.ViewCode
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(792, 639);
+            this.ClientSize = new System.Drawing.Size(1008, 639);
             this.Controls.Add(this.panelMain);
             this.Controls.Add(this.statusStrip1);
             this.HelpButton = true;
@@ -450,6 +452,8 @@ namespace ISBLScan.ViewCode
             this.panelSearchText.ResumeLayout(false);
             this.panelSearchButtons.ResumeLayout(false);
             this.panelFilterTree.ResumeLayout(false);
+            this.panelFilterTreeDate.ResumeLayout(false);
+            this.panelFilterTreeName.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();

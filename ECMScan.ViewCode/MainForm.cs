@@ -77,7 +77,7 @@ namespace ISBLScan.ViewCode
                 _form.panelISBLResult.Controls.Add(TextEditorHost);
 
                 TextBoxFilterName = new System.Windows.Forms.TextBox();
-                TextBoxFilterName.Location = new System.Drawing.Point(5, 0);
+                TextBoxFilterName.Location = new System.Drawing.Point(5, 2);
                 TextBoxFilterName.Margin = new System.Windows.Forms.Padding(4);
                 TextBoxFilterName.Name = "textBoxFilter";
                 TextBoxFilterName.Size = new System.Drawing.Size(280, 22);
@@ -88,7 +88,7 @@ namespace ISBLScan.ViewCode
                 TextBoxFilterStartDate = new System.Windows.Forms.DateTimePicker();
                 TextBoxFilterStartDate.Format = DateTimePickerFormat.Custom;
                 TextBoxFilterStartDate.CustomFormat = "yyyy-MM-dd HH:mm";
-                TextBoxFilterStartDate.Location = new System.Drawing.Point(5, 0);
+                TextBoxFilterStartDate.Location = new System.Drawing.Point(5, 2);
                 TextBoxFilterStartDate.Margin = new System.Windows.Forms.Padding(4);
                 TextBoxFilterStartDate.Name = "textBoxFilterStartDate";
                 TextBoxFilterStartDate.Size = new System.Drawing.Size(130, 22);
@@ -100,7 +100,7 @@ namespace ISBLScan.ViewCode
                 TextBoxFilterEndDate = new System.Windows.Forms.DateTimePicker();
                 TextBoxFilterEndDate.Format = DateTimePickerFormat.Custom;
                 TextBoxFilterEndDate.CustomFormat = "yyyy-MM-dd HH:mm";
-                TextBoxFilterEndDate.Location = new System.Drawing.Point(155, 0);
+                TextBoxFilterEndDate.Location = new System.Drawing.Point(155, 2);
                 TextBoxFilterEndDate.Margin = new System.Windows.Forms.Padding(4);
                 TextBoxFilterEndDate.Name = "textBoxFilterEndDate";
                 TextBoxFilterEndDate.Size = new System.Drawing.Size(130, 22);
@@ -117,7 +117,7 @@ namespace ISBLScan.ViewCode
                 CheckBoxFindAll.Name = "checkBoxFindAll";
                 CheckBoxFindAll.Size = new System.Drawing.Size(60, 28);
                 CheckBoxFindAll.TabIndex = 1226;
-                CheckBoxFindAll.Text = "All";
+                CheckBoxFindAll.Text = "&&";
                 CheckBoxFindAll.UseVisualStyleBackColor = true;
                 CheckBoxFindAll.CheckedChanged += new System.EventHandler(form.checkBoxFindAll_CheckedChanged);
                 _form.panelSearchButtons.Controls.Add(CheckBoxFindAll);

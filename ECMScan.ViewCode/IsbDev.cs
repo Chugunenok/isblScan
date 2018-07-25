@@ -255,20 +255,25 @@ namespace ISBLScan.ViewCode
             using (var connection = new SBRTEConnector(connectionParams))
             {
                 var mainNode = GetMainNode();
+                var refName = "";
+                var requisiteName = "";
                 if (mainNode.Type == IsbNodeType.Function)
                 {
-                    var functionRecord = connection.Application.ReferencesFactory.ReferenceFactory["FUNCTIONS"].GetObjectByID(mainNode.Id);
-                    functionRecord.Requisites["ISBFuncText"].Value = newValue;
-                    functionRecord.Save();
-                    this.Text = functionRecord.Requisites["ISBFuncText"].AsString;
+                    refName = "FUNCTIONS";
+                    requisiteName = "ISBFuncText";
                 }
                 if (mainNode.Type == IsbNodeType.Script)
                 {
-                    var scriptRecord = connection.Application.ReferencesFactory.ReferenceFactory["SCRIPTS"].GetObjectByID(mainNode.Id);
-                    scriptRecord.Requisites["Text"].Value = newValue;
-                    scriptRecord.Save();
-                    this.Text = scriptRecord.Requisites["Text"].AsString;
+                    refName = "SCRIPTS";
+                    requisiteName = "Text";
                 }
+
+                if (String.IsNullOrWhiteSpace(refName)) throw new NotImplementedException();
+
+                var functionRecord = connection.Application.ReferencesFactory.ReferenceFactory[refName].GetObjectByID(mainNode.Id);
+                functionRecord.Requisites[requisiteName].Value = newValue;
+                functionRecord.Save();
+                this.Text = functionRecord.Requisites[requisiteName].AsString;
             }
             return true;
         }
