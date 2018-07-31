@@ -130,6 +130,11 @@ namespace ISBLScan.ViewCode
                     ShowTabs = true,
                     AllowScrollBelowDocument = false,
                     EnableRectangularSelection = true,
+                    WordWrapIndentation = 2,
+                    IndentationSize = 2,
+                    HighlightCurrentLine = true,
+                    EnableTextDragDrop = true,
+                    CutCopyWholeLine = true
                 },
                 ShowLineNumbers = true,
                 Text = "",
