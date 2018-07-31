@@ -255,7 +255,6 @@ namespace ISBLScan.ViewCode
             string dataBase;
             string login;
             string password;
-            bool isWinAuth = false;
 
 
             var namedArguments = new Dictionary<string, string>();
@@ -319,6 +318,7 @@ namespace ISBLScan.ViewCode
         /// </summary>
         void ConnectAndGetIsbl()
         {
+            buttonSearch.Enabled = false;
             if (GetIsbl())
             {
                 var searchControls = (SearchControls)tabControlSearchText.SelectedTab.Tag;
@@ -361,19 +361,6 @@ namespace ISBLScan.ViewCode
         {
             var searchControls = (SearchControls)tabControlSearchText.SelectedTab.Tag;
             searchControls.Process();
-        }
-
-        /// <summary>
-        /// Обработка нажатия клавиши в форме аутентификации на SQL Server
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>		
-        void TextBoxLoginFormKeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                ConnectAndGetIsbl();
-            }
         }
 
         /// <summary>
