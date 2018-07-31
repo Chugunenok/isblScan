@@ -71,7 +71,7 @@ namespace ISBLScan.ViewCode
                 }
             }
 
-
+            var StepNumber = 1;
             foreach (var step in parsedWizardDfm.Nodes.Where(n => n.PropertyClass?.EndsWith("StepList") ?? false).First().Nodes.Where(n => n.PropertyClass?.EndsWith("WizardStep") ?? false))
             {
                 var wizardStep = new IsbNode("");
@@ -114,9 +114,10 @@ namespace ISBLScan.ViewCode
 
                 if (wizardStep.Nodes.Count > 0)
                 {
-                    wizardStep.Name = (string)step.Nodes.Where(n => n.PropertyName == "Title").First().PropertyValue;
+                    wizardStep.Name = StepNumber + ". " + (string)step.Nodes.Where(n => n.PropertyName == "Title").First().PropertyValue;
                     wizardNode.Nodes.Add(wizardStep);
                 }
+                StepNumber = StepNumber + 1;
             }
         }
     }

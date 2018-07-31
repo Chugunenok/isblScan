@@ -26,7 +26,7 @@ namespace ISBLScan.ViewCode
       var listGroups = new List<IsbNode>();
       SqlCommand command = new SqlCommand();
       command.Connection = Connection;
-      command.CommandText = "select Analit, NameAn, Soder from MBAnalit where Vid= (select Vid from MBVidAn where Kod = 'WIZARD_GROUPS')";
+      command.CommandText = "select Analit, NameAn, Soder from MBAnalit where Vid = (select Vid from MBVidAn where Kod = 'WIZARD_GROUPS') order by NameAn asc";
       SqlDataReader reader = command.ExecuteReader();
       if (reader.HasRows)
       {
@@ -72,7 +72,8 @@ select MBAnalit.Analit
     , HighLvl
 from MBAnalit 
     join MBText on MBText.SrcRecID = MBAnalit.Analit and MBText.SrcObjID = 119
-where Vid= (select Vid from MBVidAn where Kod = 'WIZARDS')";
+where Vid= (select Vid from MBVidAn where Kod = 'WIZARDS')
+order by MBAnalit.NameAn asc";
       command.Prepare();
       SqlDataReader reader = command.ExecuteReader();
       if (reader.HasRows)

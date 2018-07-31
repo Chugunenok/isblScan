@@ -46,7 +46,7 @@ namespace ISBLScan.ViewCode
         public void Load(List<IsbNode> isblList)
 		{
 		    IsbNode listNode = null;
-            listNode = new IsbNode("Custom Calculations");
+            listNode = new IsbNode("Записи справочников");
 
             var config = LoadConfig();
 

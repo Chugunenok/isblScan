@@ -87,39 +87,43 @@ SELECT  @Version";
             Connect(sourceDev.ConnectionParams);
 
 #if !DEBUG
-            var loaderWizard = new Wizard(_connection);
-            loaderWizard.Load(isblList);
-
-            var loaderCustom = new CustomCalculations(_connection);
-            loaderCustom.Load(isblList);
-
-            var loaderRoute = new Route(_connection);
-            loaderRoute.Load(isblList);
+            var loaderReport = new Report(_connection);
+            loaderReport.Load(isblList);
 
             var loaderRouteBlock = new RouteBlock(_connection);
             loaderRouteBlock.Load(isblList);
 
-            var loaderEDocType = new EDocType(_connection);
-            loaderEDocType.Load(isblList);
+            //var loaderDialog = new Dialog(_connection);
+            //loaderDialog.Load(isblList);
 
-            var loaderFunction = new Function(_connection);
-            loaderFunction.Load(isblList);
-
-            var loaderReference = new Reference(_connection);
-            loaderReference.Load(isblList);
-
-            var loaderReport = new Report(_connection);
-            loaderReport.Load(isblList);
+            var loaderCustom = new CustomCalculations(_connection);
+            loaderCustom.Load(isblList);
 
             var loaderReportInt = new ReportIntegrate(_connection);
             loaderReportInt.Load(isblList);
 
-            //var loaderDialog = new Dialog(_connection);
-            //  loaderDialog.Load(isblList);
+            var loaderWizard = new Wizard(_connection);
+            loaderWizard.Load(isblList);
 
-#endif
             var loaderScript = new Script(_connection);
             loaderScript.Load(isblList);
+
+            var loaderEDocType = new EDocType(_connection);
+            loaderEDocType.Load(isblList);
+
+            var loaderReference = new Reference(_connection);
+            loaderReference.Load(isblList);
+
+            var loaderRoute = new Route(_connection);
+            loaderRoute.Load(isblList);
+
+            var loaderFunction = new Function(_connection);
+            loaderFunction.Load(isblList);
+#else
+            var loaderScript = new Script(_connection);
+            loaderScript.Load(isblList);
+#endif
+
 
             Disconnect();
             return isblList;
