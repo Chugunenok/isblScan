@@ -274,6 +274,7 @@ namespace ISBLScan.ViewCode
                 functionRecord.Requisites[requisiteName].Value = newValue;
                 functionRecord.Save();
                 this.Text = functionRecord.Requisites[requisiteName].AsString;
+                this.LastUpdate = functionRecord.Requisites["LastUpdate"].AsDate;
             }
             return true;
         }
