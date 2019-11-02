@@ -70,7 +70,9 @@ namespace ISBLScan.ViewCode
                                 {"Script", "Завершение выбора"},
                                 {"TaskStart", "Возможность старта"},
                                 {"TaskAbortPossibility", "Возможность прекращения"},
-                                {"TaskAbort", "Прекращение"}
+                                {"TaskAbort", "Прекращение"},
+                                {"OnTaskFormShow", "Показ формы"},
+                                {"OnTaskFormHide", "Скрытие формы"}
                             };
             foreach (XmlNode eventXmlNode in events)
             {
@@ -129,6 +131,27 @@ namespace ISBLScan.ViewCode
                 }
                 else blockNode = null;
 
+            }
+
+            var actions = schema.SelectNodes("//RouteActions/Action");
+            var actionsNode = new IsbNode("Действия");
+            foreach (XmlNode action in actions)
+            {
+                var actionStringNode = action.SelectSingleNode("ISBLText");
+                if (actionStringNode != null)
+                {
+                    var actionString = GetNodeString(actionStringNode);
+                    if (!System.String.IsNullOrEmpty(actionString))
+                    {
+                        var actionNode = new IsbNode($"{action.Attributes["Caption"].Value} ({action.Attributes["Code"].Value})");
+                        actionNode.Text = actionString;
+                        actionsNode.Nodes.Add(actionNode);
+                    }
+                }
+            }
+            if(actionsNode.Nodes.Count > 0)
+            {
+                routeNode.Nodes.Add(actionsNode);
             }
         }
     }
