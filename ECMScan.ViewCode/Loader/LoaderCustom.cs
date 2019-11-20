@@ -97,7 +97,7 @@ where ref.Vid = (select Vid from MBVidAn where Kod = '" + setting.ReferenceName 
                             if (setting.IsTextRequisite)
                             {
                                 var bytes = (byte[])reader.GetValue(2);
-                                calculation = System.Text.Encoding.UTF8.GetString(bytes);
+                                calculation = System.Text.Encoding.GetEncoding(1251).GetString(bytes);
                             }
                             else
                             {
