@@ -103,8 +103,8 @@ order by MBAnalit.NameAn asc";
             {
               MessageBoxButtons buttons = MessageBoxButtons.OK;
               MessageBoxIcon icon = MessageBoxIcon.Information;
-              MessageBox.Show("Ошибка парсинга схемы мастера " + wizardNode.Name, "Ошибка разбора схемы мастера", buttons, icon);
-            }
+                            MessageBox.Show("Ошибка парсинга схемы мастера " + wizardNode.Name + ": " + e.Message + ". " + e.StackTrace, "Ошибка разбора схемы мастера", buttons, icon);
+                        }
           }
           if (!reader.IsDBNull(4))
           {
