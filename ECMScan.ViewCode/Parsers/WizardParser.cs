@@ -106,7 +106,9 @@ namespace ISBLScan.ViewCode
                         if (textNode != null)
                         {
                             actionEventNode.Text = (string)textNode.PropertyValue;
-                            actionEventNode.Name = (string)actionNode.Nodes.Where(n => n.PropertyName == "Title").First().PropertyValue;
+                            var name = actionNode.Nodes.Where(n => n.PropertyName == "Title").FirstOrDefault()?.PropertyValue;
+                            if (name == null) name = actionNode.Nodes.Where(n => n.PropertyName == "ActionName").First().PropertyValue;
+                            actionEventNode.Name = (string)name;
                             wizardStep.Nodes.Add(actionEventNode);
                         }
                     }
