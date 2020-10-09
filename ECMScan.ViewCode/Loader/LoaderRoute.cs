@@ -49,7 +49,7 @@ order by NameAn";
             return listGroups;
         }
 
-        public IsbNode Load()
+        override public IsbNode Load()
 		{
 		    IsbNode listNode = null;
             listNode = new IsbNode("Типовой маршрут");

@@ -58,7 +58,7 @@ namespace ISBLScan.ViewCode
             return listGroups;
         }
 
-        public IsbNode Load()
+        override public IsbNode Load()
         {
             System.Text.Encoding win1251 = System.Text.Encoding.GetEncoding(1251);
             IsbNode listNode = null;

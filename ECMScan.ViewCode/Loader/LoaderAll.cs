@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Windows.Forms;
 
 namespace ISBLScan.ViewCode
 {
@@ -91,64 +92,31 @@ SELECT  @Version";
         /// <returns>Список узлов</returns>
         public List<IsbNode> Load(List<IsbNode> isblList)
         {
-            IsbNode isblNode;
+            var loadersTypes = new List<Type>();
+            loadersTypes.Add(typeof(EDocType));
+            loadersTypes.Add(typeof(Function));
+            loadersTypes.Add(typeof(Reference));
+            loadersTypes.Add(typeof(Report));
+            loadersTypes.Add(typeof(ReportIntegrate));
+            loadersTypes.Add(typeof(Route));
+            loadersTypes.Add(typeof(RouteBlock));
+            loadersTypes.Add(typeof(Script));
+            loadersTypes.Add(typeof(Wizard));
+            loadersTypes.Add(typeof(CustomCalculations));
+            loadersTypes.Add(typeof(Dialog));
 
-            var loaderEDocType = new EDocType(_connection);
-            var loaderFunction = new Function(_connection);
-            var loaderReference = new Reference(_connection);
-            var loaderReport = new Report(_connection);
-            var loaderReportInt = new ReportIntegrate(_connection);
-            var loaderRoute = new Route(_connection);
-            var loaderRouteBlock = new RouteBlock(_connection);
-            var loaderScript = new Script(_connection);
-            var loaderWizard = new Wizard(_connection);
-            var loaderCustom = new CustomCalculations(_connection);
-            var loaderDialog = new Dialog(_connection);
-
-
-            //Загрузка типов карточке электронных документов
-            isblNode = loaderEDocType.Load();
-            isblList.Add(isblNode);
-
-            //Загрузка текстов функций
-            isblNode = loaderFunction.Load();
-            isblList.Add(isblNode);
-
-            //Загрузка текстов событий справочников, вычислений реквизитов, расчётов на форме
-            isblNode = loaderReference.Load();
-            isblList.Add(isblNode);
-
-            //Загрузка отчётов (шаблонов и расчётов)
-            isblNode = loaderReport.Load();
-            isblList.Add(isblNode);
-
-            //Загрузка интегрированных отчётов (шаблонов и расчётов)
-            isblNode = loaderReportInt.Load();
-            isblList.Add(isblNode);
-
-            //Загрузка типовых маршрутов(событий маршрутов)
-            isblNode = loaderRoute.Load();
-            isblList.Add(isblNode);
-
-            //Загрузка вычислений блоков типовых маршрутов
-            isblNode = loaderRouteBlock.Load();
-            isblList.Add(isblNode);
-
-            //Загрузка текстов расчётов (сценариев)
-            isblNode = loaderScript.Load();
-            isblList.Add(isblNode);
-
-            //Загрузка вычислений мастеров действий
-            isblNode = loaderWizard.Load();
-            isblList.Add(isblNode);
-
-            //Загрузка вычислений из справочников
-            isblNode = loaderCustom.Load();
-            isblList.Add(isblNode);
-
-            //Загрузка текстов событий диалогов, вычислений реквизитов, расчётов на форме
-            isblNode = loaderDialog.Load();
-            isblList.Add(isblNode);
+            foreach(var loaderType in loadersTypes)
+            try
+            {
+                var loader = Activator.CreateInstance(loaderType, new object[]{ _connection});
+                isblList.Add(((LoaderCommon)loader).Load());
+            }
+            catch (Exception e)
+            {
+                MessageBoxButtons buttons = MessageBoxButtons.OK;
+                MessageBoxIcon icon = MessageBoxIcon.Information;
+                MessageBox.Show(e.Message + ": " + e.StackTrace, "Ошибка загрузки " + loaderType.Name, buttons, icon);
+            }
 
             return isblList;
         }

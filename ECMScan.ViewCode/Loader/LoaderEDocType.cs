@@ -116,7 +116,7 @@ namespace ISBLScan.ViewCode
             reader.Close();
         }
 
-        public IsbNode Load()
+        override public IsbNode Load()
         {
             var methodsSupports = CheckTableExist("MBEDocTypeMethod");
             IsbNode listNode = null;

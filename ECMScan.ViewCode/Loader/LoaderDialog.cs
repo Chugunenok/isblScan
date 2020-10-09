@@ -113,7 +113,7 @@ namespace ISBLScan.ViewCode
             reader.Close();
         }
 
-        public IsbNode Load()
+        override public IsbNode Load()
         {
             var methodsSupports = CheckTableExist("SBDialogMethod");
             var rootRefNode = new IsbNode("Диалог");

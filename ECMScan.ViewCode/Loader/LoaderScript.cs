@@ -47,7 +47,7 @@ namespace ISBLScan.ViewCode
 			return listGroups;
 		}
 
-		public IsbNode Load()
+		override public IsbNode Load()
 		{
 		    IsbNode listNode = null;
 			if(this.CheckTableExist("MBReports"))

@@ -29,7 +29,11 @@ namespace ISBLScan.ViewCode
 		{
 			this.Connection = sqlConnect;
 		}
-		
+
+		virtual public IsbNode Load() {
+			return new IsbNode("No Loader");
+		}
+
 		/// <summary>
 		/// Проверка наличия таблицы с указанным именем в базы данных 
 		/// </summary>

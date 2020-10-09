@@ -111,7 +111,7 @@ namespace ISBLScan.ViewCode
             reader.Close();
         }
 
-        public IsbNode Load()
+        override public IsbNode Load()
         {
             var methodsSupports = CheckTableExist("MBVidAnMethod");
             var rootRefNode = new IsbNode("Тип справочника");

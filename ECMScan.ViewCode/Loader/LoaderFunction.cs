@@ -44,7 +44,7 @@ order by GrName";
             reader.Close();
         }
 
-        public IsbNode Load()
+        override public IsbNode Load()
         {
             var functionsNode = new IsbNode("Функция");
             LoadGroups(functionsNode);

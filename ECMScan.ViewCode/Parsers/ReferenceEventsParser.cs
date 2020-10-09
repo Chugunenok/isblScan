@@ -95,10 +95,13 @@ namespace ISBLScan.ViewCode
             {"AFTER_UPDATE", "Сохранение после"},
             {"BEFORE_CANCEL", "Отмена до"},
             {"AFTER_CANCEL", "Отмена после"},
+            {"LISTFORM", "Форма-список"},
             {"FORM", "Форма-карточка"},
             {"SHOW", "Показ"},
             {"HIDE", "Скрытие"},
-            {"TABLE", "Таблица"}
+            {"TABLE", "Таблица"},
+            {"OPERATION", "Операция"},
+            {"EXECUTION", "Выполнение"}
         };
 
         static string[] EventIdsRegExPatterns =
@@ -106,6 +109,8 @@ namespace ISBLScan.ViewCode
             "DATASET{9AFC8FC7-30C4-4076-9076-6E09A49B791C}.[A-Z А-Я_]+",
             "CARD{2147B5A6-496E-4EFF-88D9-78970D889F1F}.[A-Z А-Я_]+",
             "FORM{B28D55C1-651A-46C9-AD4E-50E73EF213A8}.[A-Z А-Я_]+",
+            "LISTFORM{EF850CF0-3135-4D1F-8726-74F95C4D08C7}.[A-Z А-Я_]+",
+            "OPERATION{C6CE6EDC-3645-4BBC-B00F-587BD2A54B4C}.[A-Z А-Я_]+",
             "TABLE{D402E843-74B2-4DC1-BFFD-DE677B48452C}[0-9]*.[A-Z А-Я_]+",
             "DIALOG{3AA220D8-D906-4914-8586-F534A4C3767E}.[A-Z А-Я_]+",
             "КАРТОЧКА.[A-Z А-Я_]+",
@@ -139,6 +144,7 @@ namespace ISBLScan.ViewCode
                         }
                         else
                         {
+                            if(eventNode == null) eventNode = new IsbNode("Неизвестное событие");
                             eventNode.Text = eventText.Substring(2);
                             eventsNode.Nodes.Add(eventNode);
                         }

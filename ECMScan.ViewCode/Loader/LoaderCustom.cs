@@ -43,7 +43,7 @@ namespace ISBLScan.ViewCode
             return Newtonsoft.Json.JsonConvert.DeserializeObject<Config>(jsonSettings);
         }
 
-        public IsbNode Load()
+        override public IsbNode Load()
 		{
 		    IsbNode listNode = null;
             listNode = new IsbNode("Custom Calculations");
